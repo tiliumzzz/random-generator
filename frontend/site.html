@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мысли великих</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+         @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 800px;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) rotateX(2deg);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite linear;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 300;
+        }
+
+        .quote-container {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border-left: 8px solid #ff6b6b;
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+
+        .quote-container.fade {
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+
+        .quote-text {
+            font-size: 1.8em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 500;
+            quotes: "«" "»" "‹" "›";
+        }
+
+        .quote-text::before {
+            content: open-quote;
+            font-size: 4em;
+            color: #ff6b6b;
+            opacity: 0.3;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+        }
+
+        .author-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .author-info {
+            text-align: right;
+        }
+
+        .author-name {
+            font-size: 1.3em;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .author-title {
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border: none;
+            padding: 20px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .action-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px dashed #ddd;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 8px solid rgba(78, 205, 196, 0.3);
+            border-top: 8px solid #4ecdc4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .quote-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ff6b6b;
+            font-size: 0.9em;
+            font-weight: bold;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .quote-text {
+                font-size: 1.4em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Великий Цитатник</h1>
+
+        <div id="quote-box">
+
+            <div id="quote-text">Нажмите на кнопку для получения цитаты</div>
+            <div id="quote-author"></div>
+        </div>
+
+        <button id="get-quote-btn">Получить следующую мудрость</button>
+
+        <div id="loading" class="loading hidden">Загрузка</div>
+
+        <div class="counter">
+            Всего цитат в базе на данный момент: <span id="quote-count">25</span>
+        </div>
+
+        <div class="footer-note">
+            Каждая цитата — зеркало человеческой мысли
+        </div>
+    </div>
+
+    <script>
+        // Получаем элементы DOM (объектной модели документа)
+        const btn = document.getElementById('get-quote-btn'); // Кнопка
+        const quoteText = document.getElementById('quote-text'); // Текст цитаты
+        const quoteAuthor = document.getElementById('quote-author'); // Автор цитаты
+        const loading = document.getElementById('loading'); // Индикатор загрузки
+
+        // Асинхронная функция - это основная функция для получения случайной цитаты, так как работает с HTTP-запросами
+
+        async function getQuote() {
+            try {
+                // 1. Показать индикатор загрузки
+                loading.classList.remove('hidden');
+                // 2. Очистить предыдущую цитату
+                quoteText.textContent = '';
+                quoteAuthor.textContent = '';
+                // 3. Отправить запрос к API бэкенда
+                const response = await fetch('http://localhost:8000/random-quote');
+                // 4. Получить цитату в формате JSON
+                const quote = await response.json();
+                // 5. Отобразить полученную цитату на странице
+                quoteText.textContent = `"${quote.text}"`;
+                quoteAuthor.textContent = `- ${quote.author}`;
+            } catch (error) {
+                // 6. Обработка ошибки (сеть, сервер, парсинг)
+                quoteText.textContent = 'Не удалось загрузить цитату';
+                quoteAuthor.textContent = 'Проверьте подключение. Попробуйте снова';
+            } finally {
+                // Скрываем индикатор загрузки
+                loading.classList.add('hidden');
+            }
+        }
+
+        // 8. Назначить обработчик события "клик" на кнопку
+        btn.addEventListener('click', getQuote);
+        // 9. Установить количество цитат при загрузке страницы
+        document.getElementById('quote-count').textContent = '25';
+        // 10. Автоматически загрузить первую цитату при открытии страницы
+        window.onload = getQuote;
+    </script>
+</body>
+</html>
