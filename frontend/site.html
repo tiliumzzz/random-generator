@@ -29,6 +29,16 @@
             perspective: 1000px;
         }
 
+        .footer-note {
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
         .card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 25px;
@@ -292,66 +302,90 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Великий Цитатник</h1>
-
-        <div id="quote-box">
-
-            <div id="quote-text">Нажмите на кнопку для получения цитаты</div>
-            <div id="quote-author"></div>
-        </div>
-
-        <button id="get-quote-btn">Получить следующую мудрость</button>
-
-        <div id="loading" class="loading hidden">Загрузка</div>
-
-        <div class="counter">
-            Всего цитат в базе на данный момент: <span id="quote-count">25</span>
-        </div>
-
-        <div class="footer-note">
-            Каждая цитата — зеркало человеческой мысли
+    <div class="app-wrapper">
+        <div class="card">
+            <div class="header">
+                <h1><i class="fas fa-brain"></i> Великий Цитатник</h1>
+                <p class="subtitle">Нажмите на кнопку для получения цитаты</p>
+            </div>
+            
+            <div class="quote-container" id="quote-box">
+                <div class="quote-text" id="quote-text">
+                    Нажмите на кнопку для получения цитаты
+                </div>
+                <div class="author-section">
+                    <div class="author-avatar" id="author-initial">ВЦ</div>
+                    <div class="author-info">
+                        <div class="author-name" id="quote-author"></div>
+                        <div class="author-title">Ожидание цитаты...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading-indicator" id="loading">
+                <div class="spinner"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="action-btn" id="get-quote-btn">
+                    <i class="fas fa-sync-alt"></i>
+                    Получить следующую мудрость
+                </button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="quote-count">25</div>
+                    <div class="stat-label">в базе</div>
+                </div>
+            </div>
+            
+            <div class="footer-note">
+                Каждая цитата — зеркало человеческой мысли
+            </div>
         </div>
     </div>
 
     <script>
-        // Получаем элементы DOM (объектной модели документа)
-        const btn = document.getElementById('get-quote-btn'); // Кнопка
-        const quoteText = document.getElementById('quote-text'); // Текст цитаты
-        const quoteAuthor = document.getElementById('quote-author'); // Автор цитаты
-        const loading = document.getElementById('loading'); // Индикатор загрузки
-
-        // Асинхронная функция - это основная функция для получения случайной цитаты, так как работает с HTTP-запросами
-
+        const btn = document.getElementById('get-quote-btn');
+        const quoteText = document.getElementById('quote-text');
+        const quoteAuthor = document.getElementById('quote-author');
+        const authorInitial = document.getElementById('author-initial');
+        const loading = document.getElementById('loading');
+        
         async function getQuote() {
             try {
-                // 1. Показать индикатор загрузки
-                loading.classList.remove('hidden');
-                // 2. Очистить предыдущую цитату
+                loading.style.display = 'block';
                 quoteText.textContent = '';
                 quoteAuthor.textContent = '';
-                // 3. Отправить запрос к API бэкенда
+                
                 const response = await fetch('http://localhost:8000/random-quote');
-                // 4. Получить цитату в формате JSON
                 const quote = await response.json();
-                // 5. Отобразить полученную цитату на странице
+                
                 quoteText.textContent = `"${quote.text}"`;
-                quoteAuthor.textContent = `- ${quote.author}`;
+                quoteAuthor.textContent = `${quote.author}`;
+                
+                // Обновляем инициалы
+                if (quote.author) {
+                    const initials = quote.author.split(' ')
+                        .map(word => word[0])
+                        .join('')
+                        .toUpperCase()
+                        .substring(0, 2);
+                    authorInitial.textContent = initials;
+                }
+                
             } catch (error) {
-                // 6. Обработка ошибки (сеть, сервер, парсинг)
                 quoteText.textContent = 'Не удалось загрузить цитату';
                 quoteAuthor.textContent = 'Проверьте подключение. Попробуйте снова';
+                authorInitial.textContent = 'ОШ';
             } finally {
-                // Скрываем индикатор загрузки
-                loading.classList.add('hidden');
+                loading.style.display = 'none';
             }
         }
-
-        // 8. Назначить обработчик события "клик" на кнопку
+        
         btn.addEventListener('click', getQuote);
-        // 9. Установить количество цитат при загрузке страницы
         document.getElementById('quote-count').textContent = '25';
-        // 10. Автоматически загрузить первую цитату при открытии страницы
         window.onload = getQuote;
     </script>
 </body>
